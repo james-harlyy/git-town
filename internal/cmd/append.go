@@ -159,13 +159,15 @@ Start:
 	if err != nil {
 		return err
 	}
+	// Apply GitHub username prefix if configured
+	targetBranchName := cmdhelpers.BranchNameWithPrefix(args.arg, repo.UnvalidatedConfig)
 	data, flow, err := determineAppendData(determineAppendDataArgs{
 		beam:          args.beam,
 		commit:        args.commit,
 		commitMessage: args.commitMessage,
 		propose:       args.propose,
 		prototype:     args.prototype,
-		targetBranch:  gitdomain.NewLocalBranchName(args.arg),
+		targetBranch:  gitdomain.NewLocalBranchName(targetBranchName),
 	}, repo)
 	if err != nil {
 		return err
