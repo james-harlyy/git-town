@@ -204,7 +204,11 @@ func determineHackData(args hackArgs, repo execute.OpenRepoResult) (data appendF
 	}
 	inputs := dialogcomponents.LoadInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	targetBranches := gitdomain.NewLocalBranchNames(args.argv...)
+	branchNamesWithPrefix := make([]string, len(args.argv))
+	for i, arg := range args.argv {
+		branchNamesWithPrefix[i] = cmdhelpers.BranchNameWithPrefix(arg, repo.UnvalidatedConfig)
+	}
+	targetBranches := gitdomain.NewLocalBranchNames(branchNamesWithPrefix...)
 	var repoStatus gitdomain.RepoStatus
 	repoStatus, err = repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
